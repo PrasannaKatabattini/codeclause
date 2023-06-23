@@ -1,0 +1,106 @@
+import mysql.connector as a
+conn=a.connect(host="localhost",user="root",password="prasanna",database="library")
+
+
+def addbook():
+    bn=input("Enter Book name:")
+    c=input("Enter book code:")
+    t=input("Enter Total Books:")
+    s=input("Enter the subject:")
+    data=(bn,c,t,s)
+    sql='insert into books values(%s,%s,%s,%s)'
+    p=conn.cursor()
+    p.execute(sql,data)
+    conn.commit()
+    print(">---------------------------------------------------------------------------------<")
+    print("Data Added successfully")
+    main()
+
+def issueb():
+    n=input("Enter name")
+    r=input("Enter regno")
+    co=input("Enter Book Code")
+    d=input("Enter date")
+    data=(n,r,co,d)
+    sql='insert into issue values(%s,%s,%s,%s)'
+    c=conn.cursor()
+    c.execute(sql,data)
+    conn.commit()
+    print(">-----------------------------------------------------------------------------------<")
+    print("Book issued is",n)
+    bookup(co,-1)
+    
+    
+    
+
+
+def submitb():
+    n=input("Enter name")
+    r=input("Enter regno")
+    co=input("Enter Book Code")
+    d=input("Enter date")
+    data=(n,r,co,d)
+    sql='insert into submit values(%s,%s,%s,%s)'
+    c=conn.cursor()
+    c.execute(sql,data)
+    conn.commit()
+    print(">-----------------------------------------------------------------------------------<")
+    print("Book submitted is",n)
+    bookup(co,1)
+    
+def bookup(co,u):
+    a="select total from books where bcode=%s"
+    data=(co,)
+    c=conn.cursor()
+    c.execute(a,data)
+    myresult=c.fetchone()
+    t=myresult[0]+u
+    sql="update books set total=%s where bcode=%s"
+    d=(t,co)
+    c.execute(sql,d)
+    conn.commit()
+    main()
+
+
+
+def deleteb():
+    bc=input("Enter book code")
+    a="delete from books where bcode=%s"
+    data=(bc,)
+    c=conn.cursor()
+    c.execute(a,data)
+    conn.commit()
+    main()
+
+def main():
+    print("""                                
+                                      LIBRARY MANAGER
+        1.Add book
+        2.issue book
+        3.submit book
+        4.delete book
+    """)
+    c=input("Enter Task no:")
+    print(">--------------------------------------------------------------------------------<")
+    if(c=='1'):
+        addbook()
+    elif(c=='2'):
+        issueb()
+    elif(c=='3'):
+        submitb()
+    elif(c=='4'):
+        deleteb()
+    else:
+        print("Wrong chooice")
+        main()
+def password():
+    ps=input("Enter password")
+    if(ps=="prasanna"):
+        main()
+    else:
+        print("Wrong password")
+        password()
+password()
+
+
+    
